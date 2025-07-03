@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
+  # Cơ sở dữ liệu PostgreSQL
   postgres:
     image: postgres:15-alpine
     container_name: toanthaycong_postgres
@@ -24,7 +24,7 @@ services:
       timeout: 5s
       retries: 5
 
-  # Go Application
+  # Ứng dụng Go
   # app:
   #   build:
   #     context: .
@@ -50,7 +50,7 @@ services:
   #     - .:/app
   #   working_dir: /app
 
-  # pgAdmin (Optional - for database management)
+  # pgAdmin (Tùy chọn - để quản lý database)
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: toanthaycong_pgadmin

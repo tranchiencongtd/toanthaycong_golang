@@ -1,8 +1,8 @@
--- Migration: 001_create_users_table.up.sql
+-- Migration: 001_create_core_tables.sql
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "citext";
 
--- Users table
+-- Bảng người dùng
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     email CITEXT UNIQUE NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE users (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Instructor profiles
+-- Hồ sơ giảng viên
 CREATE TABLE instructor_profiles (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -40,7 +40,7 @@ CREATE TABLE instructor_profiles (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Categories
+-- Danh mục khóa học
 CREATE TABLE categories (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(100) UNIQUE NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE categories (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Courses
+-- Khóa học
 CREATE TABLE courses (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     title VARCHAR(200) NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE courses (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Course sections
+-- Chương của khóa học
 CREATE TABLE course_sections (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
@@ -96,7 +96,7 @@ CREATE TABLE course_sections (
     UNIQUE(course_id, sort_order)
 );
 
--- Course lectures
+-- Bài giảng
 CREATE TABLE course_lectures (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     section_id UUID NOT NULL REFERENCES course_sections(id) ON DELETE CASCADE,

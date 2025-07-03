@@ -1,8 +1,8 @@
--- Initialize database with sample data for learning platform
+-- Khởi tạo database với dữ liệu mẫu cho nền tảng học tập
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "citext";
 
--- Insert sample categories
+-- Thêm các danh mục mẫu
 INSERT INTO categories (name, slug, description, icon_url, sort_order) VALUES
 ('Lập trình', 'lap-trinh', 'Các khóa học về lập trình và phát triển phần mềm', '/icons/programming.svg', 1),
 ('Thiết kế', 'thiet-ke', 'Thiết kế đồ họa, UI/UX và thiết kế web', '/icons/design.svg', 2),
@@ -11,7 +11,7 @@ INSERT INTO categories (name, slug, description, icon_url, sort_order) VALUES
 ('Nhiếp ảnh', 'nhiep-anh', 'Kỹ thuật chụp ảnh và chỉnh sửa', '/icons/photography.svg', 5)
 ON CONFLICT (slug) DO NOTHING;
 
--- Insert subcategories
+-- Thêm danh mục con
 INSERT INTO categories (name, slug, description, parent_id, sort_order) VALUES
 ('Web Development', 'web-development', 'HTML, CSS, JavaScript, React, Node.js', (SELECT id FROM categories WHERE slug = 'lap-trinh'), 1),
 ('Mobile Development', 'mobile-development', 'iOS, Android, React Native, Flutter', (SELECT id FROM categories WHERE slug = 'lap-trinh'), 2),
@@ -20,23 +20,23 @@ INSERT INTO categories (name, slug, description, parent_id, sort_order) VALUES
 ('Graphic Design', 'graphic-design', 'Adobe Photoshop, Illustrator, InDesign', (SELECT id FROM categories WHERE slug = 'thiet-ke'), 2)
 ON CONFLICT (slug) DO NOTHING;
 
--- Insert sample admin user
+-- Thêm người dùng admin mẫu
 INSERT INTO users (email, username, password_hash, first_name, last_name, role, is_verified) VALUES
 ('admin@toanthaycong.com', 'admin', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin', 'System', 'admin', true)
 ON CONFLICT (email) DO NOTHING;
 
--- Insert sample instructor
+-- Thêm giảng viên mẫu
 INSERT INTO users (email, username, password_hash, first_name, last_name, role, is_verified) VALUES
 ('instructor@toanthaycong.com', 'instructor1', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Nguyễn', 'Văn Giảng', 'instructor', true)
 ON CONFLICT (email) DO NOTHING;
 
--- Insert sample students
+-- Thêm học viên mẫu
 INSERT INTO users (email, username, password_hash, first_name, last_name, role, is_verified) VALUES
 ('student1@example.com', 'student1', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Trần', 'Văn Học', 'student', true),
 ('student2@example.com', 'student2', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Lê', 'Thị Sinh', 'student', true)
 ON CONFLICT (email) DO NOTHING;
 
--- Create instructor profile
+-- Tạo hồ sơ giảng viên
 INSERT INTO instructor_profiles (user_id, title, expertise, experience_years, is_approved) VALUES
 ((SELECT id FROM users WHERE username = 'instructor1'), 
  'Senior Full-stack Developer', 
@@ -45,7 +45,7 @@ INSERT INTO instructor_profiles (user_id, title, expertise, experience_years, is
  true)
 ON CONFLICT (user_id) DO NOTHING;
 
--- Insert sample tags
+-- Thêm các thẻ tag mẫu
 INSERT INTO tags (name, slug, description, color) VALUES
 ('JavaScript', 'javascript', 'JavaScript programming language', '#F7DF1E'),
 ('React', 'react', 'React.js library', '#61DAFB'),
@@ -55,7 +55,7 @@ INSERT INTO tags (name, slug, description, color) VALUES
 ('Advanced', 'advanced', 'For advanced learners', '#DC3545')
 ON CONFLICT (slug) DO NOTHING;
 
--- Insert sample course
+-- Thêm khóa học mẫu
 INSERT INTO courses (
     title, 
     slug, 

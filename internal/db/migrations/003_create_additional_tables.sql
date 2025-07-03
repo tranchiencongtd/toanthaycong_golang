@@ -1,6 +1,6 @@
 -- Migration: 003_create_additional_tables.sql
 
--- Coupons
+-- Mã giảm giá
 CREATE TABLE coupons (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     code VARCHAR(50) UNIQUE NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE coupons (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Announcements (for courses)
+-- Thông báo khóa học
 CREATE TABLE course_announcements (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
@@ -28,7 +28,7 @@ CREATE TABLE course_announcements (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Q&A
+-- Hỏi đáp
 CREATE TABLE course_questions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
@@ -41,7 +41,7 @@ CREATE TABLE course_questions (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Q&A Answers
+-- Câu trả lời hỏi đáp
 CREATE TABLE course_answers (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     question_id UUID NOT NULL REFERENCES course_questions(id) ON DELETE CASCADE,
@@ -53,36 +53,36 @@ CREATE TABLE course_answers (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Notifications
+-- Thông báo
 CREATE TABLE notifications (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title VARCHAR(200) NOT NULL,
     message TEXT NOT NULL,
-    type VARCHAR(50) NOT NULL, -- 'course_update', 'new_announcement', 'question_answered', etc.
-    related_id UUID, -- could be course_id, question_id, etc.
+    type VARCHAR(50) NOT NULL, -- 'course_update', 'new_announcement', 'question_answered', v.v.
+    related_id UUID, -- có thể là course_id, question_id, v.v.
     is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tags
+-- Thẻ tag
 CREATE TABLE tags (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(50) UNIQUE NOT NULL,
     slug VARCHAR(50) UNIQUE NOT NULL,
     description TEXT,
-    color VARCHAR(7), -- hex color
+    color VARCHAR(7), -- màu hex
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Course tags (many-to-many)
+-- Thẻ tag khóa học (nhiều-nhiều)
 CREATE TABLE course_tags (
     course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
     tag_id UUID NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
     PRIMARY KEY (course_id, tag_id)
 );
 
--- Certificates
+-- Chứng chỉ
 CREATE TABLE certificates (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,

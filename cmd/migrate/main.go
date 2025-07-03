@@ -14,12 +14,12 @@ import (
 )
 
 func main() {
-	// Load environment variables
+	// Tải các biến môi trường
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found, using system environment variables")
 	}
 
-	// Database connection
+	// Kết nối database
 	dbHost := getEnv("DB_HOST", "localhost")
 	dbPort := getEnv("DB_PORT", "5432")
 	dbUser := getEnv("DB_USER", "postgres")
@@ -42,7 +42,7 @@ func main() {
 
 	log.Println("Connected to database successfully!")
 
-	// Run migrations
+	// Chạy migrations
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {
 		log.Fatal("Failed to create migration driver:", err)

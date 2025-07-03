@@ -1,6 +1,6 @@
 -- Migration: 002_create_enrollment_tables.sql
 
--- Enrollments
+-- Đăng ký khóa học
 CREATE TABLE enrollments (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -13,20 +13,20 @@ CREATE TABLE enrollments (
     UNIQUE(user_id, course_id)
 );
 
--- Lecture progress
+-- Tiến độ bài giảng
 CREATE TABLE lecture_progress (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     lecture_id UUID NOT NULL REFERENCES course_lectures(id) ON DELETE CASCADE,
     is_completed BOOLEAN DEFAULT FALSE,
-    watch_time INTEGER DEFAULT 0, -- in seconds
+    watch_time INTEGER DEFAULT 0, -- tính bằng giây
     completed_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, lecture_id)
 );
 
--- Reviews and ratings
+-- Đánh giá và xếp hạng
 CREATE TABLE course_reviews (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -39,7 +39,7 @@ CREATE TABLE course_reviews (
     UNIQUE(user_id, course_id)
 );
 
--- Wishlists
+-- Danh sách yêu thích
 CREATE TABLE wishlists (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -48,7 +48,7 @@ CREATE TABLE wishlists (
     UNIQUE(user_id, course_id)
 );
 
--- Carts
+-- Giỏ hàng
 CREATE TABLE carts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -57,7 +57,7 @@ CREATE TABLE carts (
     UNIQUE(user_id, course_id)
 );
 
--- Orders
+-- Đơn hàng
 CREATE TABLE orders (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -73,7 +73,7 @@ CREATE TABLE orders (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Order items
+-- Chi tiết đơn hàng
 CREATE TABLE order_items (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,

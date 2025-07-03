@@ -1,38 +1,38 @@
-# Build stage
+# Giai đoạn build
 FROM golang:1.19-alpine AS builder
 
-# Set working directory
+# Thiết lập thư mục làm việc
 WORKDIR /app
 
-# Copy go mod files
+# Copy các file go mod
 COPY go.mod go.sum ./
 
-# Download dependencies
+# Tải xuống dependencies
 RUN go mod download
 
 # Copy source code
 COPY . .
 
-# Build the application
+# Build ứng dụng
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/_your_app_/
 
-# Runtime stage
+# Giai đoạn runtime
 FROM alpine:latest
 
-# Install ca-certificates for HTTPS requests
+# Cài đặt ca-certificates cho HTTPS requests
 RUN apk --no-cache add ca-certificates
 
-# Create app directory
+# Tạo thư mục app
 WORKDIR /root/
 
-# Copy the binary from builder stage
+# Copy binary từ giai đoạn builder
 COPY --from=builder /app/main .
 
-# Copy config files if needed
+# Copy config files nếu cần
 COPY --from=builder /app/configs ./configs
 
-# Expose port
+# Mở port
 EXPOSE 8080
 
-# Run the application
+# Chạy ứng dụng
 CMD ["./main"]
