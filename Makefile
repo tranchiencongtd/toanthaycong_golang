@@ -31,6 +31,15 @@ docker-clean:
 db-connect:
 	docker-compose exec postgres psql -U postgres -d toanthaycong
 
+# Khởi tạo dữ liệu mẫu
+db-seed:
+	go run cmd/seed/main.go
+
+# Reset database (migration + seed)
+db-reset:
+	make migrate-up
+	make db-seed
+
 # Sao lưu database
 db-backup:
 	docker-compose exec postgres pg_dump -U postgres toanthaycong > backup.sql
@@ -56,6 +65,8 @@ install-sqlc:
 
 # Cài đặt dependencies
 deps:
+	go mod tidy
+	go mod download
 	go mod download
 	go mod tidy
 	go mod vendor
@@ -72,7 +83,11 @@ clean-vendor:
 
 # Chạy ở chế độ development
 dev:
-	go run cmd/_your_app_/main.go
+	go run cmd/api/main.go
+
+# Chạy API server
+api:
+	go run cmd/api/main.go
 
 # Chạy tests
 test:
@@ -96,3 +111,20 @@ setup:
 	@echo "Generating SQL code..."
 	make sqlc-generate
 	@echo "Setup completed!"
+
+# Setup với dữ liệu mẫu
+setup-with-data:
+	@echo "Setting up development environment with sample data..."
+	make deps
+	make install-sqlc
+	@echo "Starting Docker containers..."
+	make docker-up
+	@echo "Waiting for database to be ready..."
+	sleep 10
+	@echo "Running migrations..."
+	make migrate-up
+	@echo "Seeding sample data..."
+	make db-seed
+	@echo "Generating SQL code..."
+	make sqlc-generate
+	@echo "✅ Setup completed with sample data!"

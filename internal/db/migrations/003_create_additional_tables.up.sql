@@ -82,17 +82,6 @@ CREATE TABLE course_tags (
     PRIMARY KEY (course_id, tag_id)
 );
 
--- Chứng chỉ
-CREATE TABLE certificates (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
-    certificate_number VARCHAR(100) UNIQUE NOT NULL,
-    issued_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    certificate_url TEXT,
-    is_valid BOOLEAN DEFAULT TRUE,
-    UNIQUE(user_id, course_id)
-);
 
 CREATE INDEX idx_coupons_code ON coupons(code);
 CREATE INDEX idx_coupons_valid_period ON coupons(valid_from, valid_until);
@@ -103,4 +92,3 @@ CREATE INDEX idx_course_answers_question_id ON course_answers(question_id);
 CREATE INDEX idx_notifications_user_id ON notifications(user_id);
 CREATE INDEX idx_notifications_type ON notifications(type);
 CREATE INDEX idx_tags_slug ON tags(slug);
-CREATE INDEX idx_certificates_user_id ON certificates(user_id);
